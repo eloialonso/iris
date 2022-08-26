@@ -1,0 +1,21 @@
+train:
+  _target_: envs.make_atari
+  id: null
+  size: 64
+  max_episode_steps: 20000
+  noop_max: 30
+  frame_skip: 4
+  done_on_life_loss: True
+  clip_reward: False
+
+test:
+  _target_: ${..train._target_}
+  id: ${..train.id}
+  size: ${..train.size}
+  max_episode_steps: 108000
+  noop_max: 1
+  frame_skip: ${..train.frame_skip}
+  done_on_life_loss: False
+  clip_reward: False
+
+keymap: atari/${.train.id}

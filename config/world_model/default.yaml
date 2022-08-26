@@ -1,0 +1,10 @@
+_target_: models.TransformerConfig
+tokens_per_block: 17
+max_blocks: 20
+attention: 'causal'
+num_layers: 10
+num_heads: 4
+embed_dim: 256
+embed_pdrop: 0.1
+resid_pdrop: 0.1
+attn_pdrop: 0.1

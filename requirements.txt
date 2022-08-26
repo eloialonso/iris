@@ -1,0 +1,10 @@
+ale-py==0.7.4
+einops==0.3.2
+gym[accept-rom-license]==0.21.0
+hydra-core==1.1.1
+opencv-python
+protobuf==3.20.*
+psutil==5.8.0
+pygame==2.1.2
+tqdm==4.62.3
+wandb==0.12.7
