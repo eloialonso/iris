@@ -1,6 +1,6 @@
 # Transformers are Sample Efficient World Models (IRIS)
 
-[Transformers are Sample Efficient World Models](https://arXiv-url.com) <br>
+[Transformers are Sample Efficient World Models](https://arxiv.org/abs/2209.00588) <br>
 [Vincent Micheli](https://vmicheli.github.io)\*, [Eloi Alonso](https://eloialonso.github.io)\*, [François Fleuret](https://fleuret.org/francois/) <br>
 \* Denotes equal contribution
 
@@ -23,7 +23,12 @@
 If you find this code or paper useful, please use the following reference:
 
 ```
-Coming soon
+@article{iris2022,
+  title={Transformers are Sample Efficient World Models},
+  author={Micheli, Vincent and Alonso, Eloi and Fleuret, François},
+  journal={arXiv preprint arXiv:2209.00588},
+  year={2022}
+}
 ```
 
 ## Setup
