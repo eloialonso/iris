@@ -14,7 +14,7 @@
 
 - IRIS is a data-efficient agent trained over millions of imagined trajectories in a world model.
 - The world model is composed of a discrete autoencoder and an autoregressive Transformer.
-- Our approach casts dynamics learning as a sequence modeling problem, where the autoencoder builds a language of image tokens and the Transformer composes that language over time.
+- Our approach casts dynamic learning as a sequence modelling problem, where the autoencoder builds a language of image tokens and the Transformer composes that language over time.
 
 
 
