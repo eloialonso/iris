@@ -1,3 +1,4 @@
+from functools import partial 
 from pathlib import Path
 
 import hydra
@@ -18,7 +19,7 @@ def main(cfg: DictConfig):
     assert cfg.mode in ('world_model', 'episode_replay', 'agent')
 
     if cfg.mode in ['world_model', 'agent']:
-        env_fn = lambda: instantiate(cfg.env.test)
+        env_fn = partial(instantiate, config=cfg.env.test)
         test_env = SingleProcessEnv(env_fn)
         tokenizer = instantiate(cfg.tokenizer)
         world_model = WorldModel(obs_vocab_size=tokenizer.vocab_size, act_vocab_size=test_env.num_actions, config=instantiate(cfg.world_model))

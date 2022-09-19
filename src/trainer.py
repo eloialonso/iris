@@ -1,4 +1,5 @@
 from collections import defaultdict
+from functools import partial
 from pathlib import Path
 import shutil
 import sys
@@ -62,7 +63,7 @@ class Trainer:
         self.episode_manager_imagination = EpisodeDirManager(self.episode_dir / 'imagination', max_num_episodes=cfg.evaluation.actor_critic.num_episodes_to_save)
 
         def create_env(cfg_env, num_envs):
-            env_fn = lambda: instantiate(cfg_env)
+            env_fn = partial(instantiate, config=cfg_env)
             return MultiProcessEnv(env_fn, num_envs, should_wait_num_envs_ratio=1.0) if num_envs > 1 else SingleProcessEnv(env_fn)
 
         if self.cfg.training.should:
