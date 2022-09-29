@@ -21,7 +21,7 @@ from episode import Episode
 from make_reconstructions import make_reconstructions_from_batch
 from models.actor_critic import ActorCritic
 from models.world_model import WorldModel
-from utils import configure_optimizer, EpisodeDirManager, set_seed
+from src.utils import configure_optimizer, EpisodeDirManager, set_seed
 
 
 class Trainer:

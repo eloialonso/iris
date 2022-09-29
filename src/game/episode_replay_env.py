@@ -4,8 +4,8 @@ import numpy as np
 from PIL import Image
 import torch
 
-from episode import Episode
-from game.keymap import get_keymap_and_action_names
+from src.episode import Episode
+from src.game.keymap import get_keymap_and_action_names
 
 
 class EpisodeReplayEnv:

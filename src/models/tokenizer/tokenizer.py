@@ -9,10 +9,10 @@ from einops import rearrange
 import torch
 import torch.nn as nn
 
-from dataset import Batch
+from src.dataset import Batch
 from .lpips import LPIPS
 from .nets import Encoder, Decoder
-from utils import LossWithIntermediateLosses
+from src.utils import LossWithIntermediateLosses
 
 
 @dataclass

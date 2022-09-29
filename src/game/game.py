@@ -5,8 +5,8 @@ import numpy as np
 import pygame
 from PIL import Image
 
-from envs import WorldModelEnv
-from game.keymap import get_keymap_and_action_names
+from src.envs import WorldModelEnv
+from src.game.keymap import get_keymap_and_action_names
 
 
 class Game:

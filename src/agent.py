@@ -7,7 +7,7 @@ import torch.nn as nn
 from models.actor_critic import ActorCritic
 from models.tokenizer import Tokenizer
 from models.world_model import WorldModel
-from utils import extract_state_dict
+from src.utils import extract_state_dict
 
 
 class Agent(nn.Module):

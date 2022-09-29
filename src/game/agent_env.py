@@ -3,9 +3,9 @@ import numpy as np
 from PIL import Image
 import torch
 
-from agent import Agent
-from envs import SingleProcessEnv
-from game.keymap import get_keymap_and_action_names
+from src.agent import Agent
+from src.envs import SingleProcessEnv
+from src.game.keymap import get_keymap_and_action_names
 
 
 class AgentEnv:

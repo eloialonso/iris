@@ -10,11 +10,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 from tqdm import tqdm
 
-from dataset import Batch
-from envs.world_model_env import WorldModelEnv
-from models.tokenizer import Tokenizer
-from models.world_model import WorldModel
-from utils import compute_lambda_returns, LossWithIntermediateLosses
+from src.dataset import Batch
+from src.envs.world_model_env import WorldModelEnv
+from src.models.tokenizer import Tokenizer
+from src.models.world_model import WorldModel
+from src.utils import compute_lambda_returns, LossWithIntermediateLosses
 
 
 @dataclass

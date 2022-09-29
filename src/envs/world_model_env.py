@@ -9,7 +9,7 @@ import torch
 from torch.distributions.categorical import Categorical
 import torchvision
 
-from utils import extract_state_dict
+from src.utils import extract_state_dict
 
 
 class WorldModelEnv:
