@@ -100,9 +100,13 @@ outputs/YYYY-MM-DD/hh-mm-ss/
   - `eval.py`: Launch `python ./scripts/eval.py` to evaluate the run.
   - `resume.sh`: Launch `./scripts/resume.sh` to resume a training that crashed.
   - `play.sh`: Tool to visualize some interesting aspects of the run.
-    - Launch `./scripts/play.sh -a` to watch the agent play live in the environment. The left panel displays the original environment, and the right panel shows what the agent actually sees through its discrete autoencoder.
+    - Launch `./scripts/play.sh` to watch the agent play live in the environment. If you add the flag `-r`, the left panel displays the original frame, the center panel displays the same frame downscaled to the input resolution of the discrete autoencoder, and the right panel shows the output of the autoencoder (what the agent actually sees).
     - Launch `./scripts/play.sh -w` to unroll live trajectories with your keyboard inputs (i.e. to play in the world model). Note that for faster interaction, the memory of the Transformer is flushed every 20 frames.
-    - Launch `./scripts/play.sh` to visualize the episodes contained in `media/episodes`.
+    - Launch `./scripts/play.sh -a` to watch the agent play live in the world model. Note that for faster interaction, the memory of the Transformer is flushed every 20 frames.
+    - Launch `./scripts/play.sh -e` to visualize the episodes contained in `media/episodes`.
+    - Add the flag `-h` to display a header with additional information.
+    - Press '`,`' to start and stop recording. The corresponding segment is saved in `media/recordings` in mp4 and numpy formats.
+    - Add the flag `-s` to enter 'save mode', where the user is prompted to save trajectories upon completion.
 
 ## Results notebook
 

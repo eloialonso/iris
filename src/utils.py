@@ -1,4 +1,5 @@
 from collections import OrderedDict
+import cv2
 from pathlib import Path
 import random
 import shutil
@@ -140,3 +141,14 @@ class RandomHeuristic:
         assert obs.ndim == 4  # (N, H, W, C)
         n = obs.size(0)
         return torch.randint(low=0, high=self.num_actions, size=(n,))
+
+
+def make_video(fname, fps, frames):
+    assert frames.ndim == 4 # (t, h, w, c)
+    t, h, w, c = frames.shape
+    assert c == 3
+
+    video = cv2.VideoWriter(str(fname), cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
+    for frame in frames:
+        video.write(frame[:, :, ::-1])
+    video.release()

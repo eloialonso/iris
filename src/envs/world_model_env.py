@@ -9,23 +9,14 @@ import torch
 from torch.distributions.categorical import Categorical
 import torchvision
 
-from utils import extract_state_dict
-
 
 class WorldModelEnv:
 
-    def __init__(self, tokenizer: torch.nn.Module, world_model: torch.nn.Module, device: Union[str, torch.device], pretrained_agent_path: Optional[str] = None, env: Optional[gym.Env] = None) -> None:
+    def __init__(self, tokenizer: torch.nn.Module, world_model: torch.nn.Module, device: Union[str, torch.device], env: Optional[gym.Env] = None) -> None:
 
         self.device = torch.device(device)
         self.world_model = world_model.to(self.device).eval()
         self.tokenizer = tokenizer.to(self.device).eval()
-
-        if pretrained_agent_path is not None:
-            agent_state_dict = torch.load(pretrained_agent_path)
-            self.world_model.load_state_dict(extract_state_dict(agent_state_dict, 'world_model'))
-            incompatible_keys = self.tokenizer.load_state_dict(extract_state_dict(agent_state_dict, 'tokenizer'), strict=False)
-            assert not incompatible_keys.missing_keys
-            assert (not incompatible_keys.unexpected_keys) or all([k.startswith('lpips.') for k in incompatible_keys.unexpected_keys])
 
         self.keys_values_wm, self.obs_tokens, self._num_observations_tokens = None, None, None
 
