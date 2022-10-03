@@ -121,13 +121,7 @@ Pretrained models are available in `pretrained_models/`.
 
 - To start a training run from one of these checkpoints, in the section `initialization` of  `config/trainer.yaml`, set `path_to_checkpoint` to the corresponding path, and `load_tokenizer`, `load_world_model`, and `load_actor_critic` to `True`.
 
-- To visualize one of these checkpoints, run the following commands:
-  ```bash
-  mkdir checkpoints
-  cp pretrained_models/Breakout.pt checkpoints/last.pt
-  ./scripts/play.sh
-  ```
-  with optionally the flags described above for `play.sh`.
+- To visualize one of these checkpoints, set `train.id` to the corresponding game in `config/env/default.yaml`, create a `checkpoints` directory and copy the checkpoint to `checkpoints/last.pt`. You can then visualize the agent with `./scripts/play.sh` as described above.
 
 ## Credits
 
