@@ -17,7 +17,6 @@
 - Our approach casts dynamics learning as a sequence modeling problem, where the autoencoder builds a language of image tokens and the Transformer composes that language over time.
 
 
-
 ## BibTeX
 
 If you find this code or paper useful, please use the following reference:
@@ -33,7 +32,6 @@ If you find this code or paper useful, please use the following reference:
 
 ## Setup
 
-- Clone the repository. If you want to download the [pretrained models](#pretrained-models) (~3.1 GB), install [Git LFS](https://git-lfs.github.com/) before cloning. To prevent Git LFS from downloading models, set `GIT_LFS_SKIP_SMUDGE=1`.
 - Install [PyTorch](https://pytorch.org/get-started/locally/) (torch and torchvision). Code developed with torch==1.11.0 and torchvision==0.12.0.
 - Install [other dependencies](requirements.txt): `pip install -r requirements.txt`
 - Warning: Atari ROMs will be downloaded with the dependencies, which means that you acknowledge that you have the license to use them.
@@ -117,7 +115,7 @@ Use the notebook `results/results_iris.ipynb` to reproduce the figures from the 
 
 ## Pretrained models
 
-Pretrained models are available in `pretrained_models/`.
+Pretrained models are available [here](https://github.com/eloialonso/iris_pretrained_models).
 
 - To start a training run from one of these checkpoints, in the section `initialization` of  `config/trainer.yaml`, set `path_to_checkpoint` to the corresponding path, and `load_tokenizer`, `load_world_model`, and `load_actor_critic` to `True`.
 
