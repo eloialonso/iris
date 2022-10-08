@@ -6,6 +6,7 @@ from .done_tracker import DoneTrackerEnv
 
 
 class SingleProcessEnv(DoneTrackerEnv):
+    # TODO make compatible with custom env with continuous
     def __init__(self, env_fn):
         super().__init__(num_envs=1)
         self.env = env_fn()

@@ -22,7 +22,7 @@ class Collector:
         self.episode_dir_manager = episode_dir_manager
         self.obs = self.env.reset()
         self.episode_ids = [None] * self.env.num_envs
-        self.heuristic = RandomHeuristic(self.env.num_actions)
+        self.heuristic = RandomHeuristic(self.env.num_actions)  # TODO
 
     @torch.no_grad()
     def collect(self, agent: Agent, epoch: int, epsilon: float, should_sample: bool, temperature: float, burn_in: int, *, num_steps: Optional[int] = None, num_episodes: Optional[int] = None):

@@ -1,6 +1,6 @@
 train:
   _target_: envs.make_atari
-  id: null
+  id: ALE/Assault-v5
   size: 64
   max_episode_steps: 20000
   noop_max: 30

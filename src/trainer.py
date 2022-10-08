@@ -3,6 +3,7 @@ from functools import partial
 from pathlib import Path
 import shutil
 import sys
+import os
 import time
 from typing import Any, Dict, Optional, Tuple
 
@@ -50,9 +51,10 @@ class Trainer:
             config_path = config_dir / 'trainer.yaml'
             config_dir.mkdir(exist_ok=False, parents=False)
             shutil.copy('.hydra/config.yaml', config_path)
-            wandb.save(str(config_path))
-            shutil.copytree(src=(Path(hydra.utils.get_original_cwd()) / "src"), dst="./src")
-            shutil.copytree(src=(Path(hydra.utils.get_original_cwd()) / "scripts"), dst="./scripts")
+            ###shutil.copy(str(config_path), os.path.join(wandb.run.dir, config_dir))
+            #wandb.save(str(config_path))
+            #shutil.copytree(src=(Path(hydra.utils.get_original_cwd()) / "src"), dst="./")
+            #shutil.copytree(src=(Path(hydra.utils.get_original_cwd()) / "scripts"), dst="../scripts")
             self.ckpt_dir.mkdir(exist_ok=False, parents=False)
             self.media_dir.mkdir(exist_ok=False, parents=False)
             self.episode_dir.mkdir(exist_ok=False, parents=False)

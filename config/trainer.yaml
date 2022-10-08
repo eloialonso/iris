@@ -23,7 +23,7 @@ initialization:
 
 common:
   epochs: 600
-  device: cuda:0
+  device: cpu
   do_checkpoint: True
   seed: 0
   sequence_length: ${world_model.max_blocks}

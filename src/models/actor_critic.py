@@ -35,6 +35,7 @@ class ImagineOutput:
 
 class ActorCritic(nn.Module):
     def __init__(self, act_vocab_size, use_original_obs: bool = False) -> None:
+        # TODO add act continuous size
         super().__init__()
         self.use_original_obs = use_original_obs
         self.conv1 = nn.Conv2d(3, 32, 3, stride=1, padding=1)
@@ -51,7 +52,7 @@ class ActorCritic(nn.Module):
         self.hx, self.cx = None, None
 
         self.critic_linear = nn.Linear(512, 1)
-        self.actor_linear = nn.Linear(512, act_vocab_size)
+        self.actor_linear = nn.Linear(512, act_vocab_size)  # TODO add more entries for continuous
 
     def __repr__(self) -> str:
         return "actor_critic"
@@ -92,7 +93,7 @@ class ActorCritic(nn.Module):
         else:
             self.hx[mask_padding], self.cx[mask_padding] = self.lstm(x, (self.hx[mask_padding], self.cx[mask_padding]))
 
-        logits_actions = rearrange(self.actor_linear(self.hx), 'b a -> b 1 a')
+        logits_actions = rearrange(self.actor_linear(self.hx), 'b a -> b 1 a')  # TODO split logits to create another OutputClass
         means_values = rearrange(self.critic_linear(self.hx), 'b 1 -> b 1 1')
 
         return ActorCriticOutput(logits_actions, means_values)
@@ -112,9 +113,9 @@ class ActorCritic(nn.Module):
 
         values = outputs.values[:, :-1]
 
-        d = Categorical(logits=outputs.logits_actions[:, :-1])
-        log_probs = d.log_prob(outputs.actions[:, :-1])
-        loss_actions = -1 * (log_probs * (lambda_returns - values.detach())).mean()
+        d = Categorical(logits=outputs.logits_actions[:, :-1])  # TODO accept new OutputClass
+        log_probs = d.log_prob(outputs.actions[:, :-1])  # TODO
+        loss_actions = -1 * (log_probs * (lambda_returns - values.detach())).mean()  # TODO define loss for continuous actions
         loss_entropy = - entropy_weight * d.entropy().mean()
         loss_values = F.mse_loss(values, lambda_returns)
 
@@ -145,11 +146,11 @@ class ActorCritic(nn.Module):
             all_observations.append(obs)
 
             outputs_ac = self(obs)
-            action_token = Categorical(logits=outputs_ac.logits_actions).sample()
-            obs, reward, done, _ = wm_env.step(action_token, should_predict_next_obs=(k < horizon - 1))
+            action_token = Categorical(logits=outputs_ac.logits_actions).sample()  # TODO add continuous (from new OutputClass)
+            obs, reward, done, _ = wm_env.step(action_token, should_predict_next_obs=(k < horizon - 1))  # TODO add continuous
 
-            all_actions.append(action_token)
-            all_logits_actions.append(outputs_ac.logits_actions)
+            all_actions.append(action_token)  # TODO concat
+            all_logits_actions.append(outputs_ac.logits_actions)  # TODO concat
             all_values.append(outputs_ac.means_values)
             all_rewards.append(torch.tensor(reward).reshape(-1, 1))
             all_ends.append(torch.tensor(done).reshape(-1, 1))

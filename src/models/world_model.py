@@ -41,7 +41,7 @@ class WorldModel(nn.Module):
             max_blocks=config.max_blocks,
             block_masks=[act_tokens_pattern, obs_tokens_pattern],
             embedding_tables=nn.ModuleList([nn.Embedding(act_vocab_size, config.embed_dim), nn.Embedding(obs_vocab_size, config.embed_dim)])
-        )
+        )  # TODO add linear layer to append to embedding (pay attention to joint embedding)
 
         self.head_observations = Head(
             max_blocks=config.max_blocks,
@@ -83,7 +83,7 @@ class WorldModel(nn.Module):
         num_steps = tokens.size(1)  # (B, T)
         assert num_steps <= self.config.max_tokens
         prev_steps = 0 if past_keys_values is None else past_keys_values.size
-
+        # TODO map continuous actions into another "embedding"
         sequences = self.embedder(tokens, num_steps, prev_steps) + self.pos_emb(prev_steps + torch.arange(num_steps, device=tokens.device))
 
         x = self.transformer(sequences, past_keys_values)

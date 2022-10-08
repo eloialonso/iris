@@ -11,7 +11,7 @@ from PIL import Image
 
 def make_atari(id, size=64, max_episode_steps=None, noop_max=30, frame_skip=4, done_on_life_loss=False, clip_reward=False):
     env = gym.make(id)
-    assert 'NoFrameskip' in env.spec.id or 'Frameskip' not in env.spec
+    assert 'NoFrameskip' in env.spec.id or 'Frameskip' not in dir(env.spec)
     env = ResizeObsWrapper(env, (size, size))
     if clip_reward:
         env = RewardClippingWrapper(env)

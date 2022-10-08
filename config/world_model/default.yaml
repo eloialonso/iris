@@ -8,3 +8,5 @@ embed_dim: 256
 embed_pdrop: 0.1
 resid_pdrop: 0.1
 attn_pdrop: 0.1
+
+# TODO add linear emb size for continuous

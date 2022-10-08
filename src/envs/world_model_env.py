@@ -63,6 +63,7 @@ class WorldModelEnv:
 
     @torch.no_grad()
     def step(self, action: Union[int, np.ndarray, torch.LongTensor], should_predict_next_obs: bool = True) -> None:
+        # TODO accept continuous (pass another arg into world model only when action token)
         assert self.keys_values_wm is not None and self.num_observations_tokens is not None
 
         num_passes = 1 + self.num_observations_tokens if should_predict_next_obs else 1
