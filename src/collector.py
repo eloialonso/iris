@@ -22,11 +22,12 @@ class Collector:
         self.episode_dir_manager = episode_dir_manager
         self.obs = self.env.reset()
         self.episode_ids = [None] * self.env.num_envs
-        self.heuristic = RandomHeuristic(self.env.num_actions)  # TODO
+        self.heuristic = RandomHeuristic(self.env.num_actions)  # TODO add random continuous heuristic
 
     @torch.no_grad()
     def collect(self, agent: Agent, epoch: int, epsilon: float, should_sample: bool, temperature: float, burn_in: int, *, num_steps: Optional[int] = None, num_episodes: Optional[int] = None):
         assert self.env.num_actions == agent.world_model.act_vocab_size
+        # TODO add continuous assertion
         assert 0 <= epsilon <= 1
 
         assert (num_steps is None) != (num_episodes is None)
@@ -59,7 +60,7 @@ class Collector:
 
             self.obs, reward, done, _ = self.env.step(act)
 
-            actions.append(act)
+            actions.append(act)  # TODO store continuous (probably via cat)
             rewards.append(reward)
             dones.append(done)
 
@@ -114,7 +115,7 @@ class Collector:
         for i, (o, a, r, d) in enumerate(zip(*map(lambda arr: np.swapaxes(arr, 0, 1), [observations, actions, rewards, dones]))):  # Make everything (N, T, ...) instead of (T, N, ...)
             episode = Episode(
                 observations=torch.ByteTensor(o).permute(0, 3, 1, 2).contiguous(),  # channel-first
-                actions=torch.LongTensor(a),
+                actions=torch.LongTensor(a),  # TODO add continuous (probably via cat)
                 rewards=torch.FloatTensor(r),
                 ends=torch.LongTensor(d),
                 mask_padding=torch.ones(d.shape[0], dtype=torch.bool),

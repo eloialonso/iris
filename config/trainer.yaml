@@ -35,13 +35,13 @@ collection:
     stop_after_epochs: 500
     num_episodes_to_save: 10
     config:
-      epsilon: 0.01
+      epsilon: 0.01  # random move proba
       should_sample: True
       temperature: 1.0
       num_steps: 200
       burn_in: ${training.actor_critic.burn_in}
   test:
-    num_envs: 8
+    num_envs: 1
     num_episodes_to_save: ${collection.train.num_episodes_to_save}
     config:
       epsilon: 0.0
