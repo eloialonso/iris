@@ -30,7 +30,7 @@ class ResizeObsWrapper(gym.ObservationWrapper):
         gym.ObservationWrapper.__init__(self, env)
         self.size = tuple(size)
         self.observation_space = gym.spaces.Box(low=0, high=255, shape=(size[0], size[1], 3), dtype=np.uint8)
-        self.original_obs = None
+        self.unwrapped.original_obs = None
 
     def resize(self, obs: np.ndarray):
         img = Image.fromarray(obs)
@@ -38,7 +38,7 @@ class ResizeObsWrapper(gym.ObservationWrapper):
         return np.array(img)
 
     def observation(self, observation: np.ndarray) -> np.ndarray:
-        self.original_obs = observation
+        self.unwrapped.original_obs = observation
         return self.resize(observation)
 
 

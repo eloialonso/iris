@@ -1,8 +1,10 @@
 #!/usr/bin/bash
 
 fps=15
-header=1
-mode="episode_replay"
+header=0
+reconstruction=0
+save_mode=0
+mode="agent_in_env"
 
 while [ "$1" != "" ]; do
     case $1 in
@@ -10,14 +12,23 @@ while [ "$1" != "" ]; do
             shift
             fps=$1
             ;;
-        -h | --no-header )
-            header=0
+        -h | --header )
+            header=1
+            ;;
+        -r | --reconstruction )
+            reconstruction=1
+            ;;
+        -s | --save-mode )
+            save_mode=1
+            ;;
+        -a | --agent-world-model )
+            mode="agent_in_world_model"
+            ;;
+        -e | --episode )
+            mode="episode_replay"
             ;;
         -w | --world-model )
-            mode="world_model"
-            ;;
-        -a | --agent )
-            mode="agent"
+            mode="play_in_world_model"
             ;;
         * )
             echo Invalid usage : $1
@@ -26,4 +37,4 @@ while [ "$1" != "" ]; do
     shift
 done
 
-python src/play.py hydra.run.dir=. hydra.output_subdir=null +mode="${mode}" +fps="${fps}" +header="${header}"
+python src/play.py hydra.run.dir=. hydra.output_subdir=null +mode="${mode}" +fps="${fps}" +header="${header}" +reconstruction="${reconstruction}" +save_mode="${save_mode}"

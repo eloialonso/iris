@@ -1,3 +1,5 @@
+from datetime import datetime
+from pathlib import Path
 from typing import Tuple, Union
 
 import gym
@@ -7,16 +9,19 @@ from PIL import Image
 
 from src.envs import WorldModelEnv
 from src.game.keymap import get_keymap_and_action_names
+from src.utils import make_video
 
 
 class Game:
-    def __init__(self, env: Union[gym.Env, WorldModelEnv], keymap_name: str, size: Tuple[int, int], fps: int, verbose: bool) -> None:
+    def __init__(self, env: Union[gym.Env, WorldModelEnv], keymap_name: str, size: Tuple[int, int], fps: int, verbose: bool, record_mode: bool) -> None:
         self.env = env
         self.height, self.width = size
         self.fps = fps
         self.verbose = verbose
-
+        self.record_mode = record_mode
         self.keymap, self.action_names = get_keymap_and_action_names(keymap_name)
+
+        self.record_dir = Path('media') / 'recordings'
 
         print('Actions:')
         for key, idx in self.keymap.items():
@@ -52,16 +57,23 @@ class Game:
 
         if isinstance(self.env, gym.Env):
             _, info = self.env.reset(return_info=True)
-            draw_game(info['rgb'])
+            img = info['rgb']
         else:
             self.env.reset()
-            draw_game(self.env.render())
+            img = self.env.render()
+        
+        draw_game(img)
 
         clear_header()
         pygame.display.flip()
 
+        episode_buffer = []
+        segment_buffer = []
+        recording = False
+
         do_reset, do_wait = False, False
         should_stop = False
+        
         while not should_stop:
 
             action = 0  # noop
@@ -75,6 +87,16 @@ class Game:
                     do_reset = True
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_PERIOD:
                     do_wait = not do_wait
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_COMMA:
+                    if not recording: 
+                        recording = True
+                        print('Started recording.')
+                    else:
+                        print('Stopped recording.')    
+                        self.save_recording(np.stack(segment_buffer))
+                        recording = False
+                        segment_buffer = []
+
             if action == 0:
                 pressed = pygame.key.get_pressed()
                 for key, action in self.keymap.items():
@@ -90,6 +112,12 @@ class Game:
 
             img = info['rgb'] if isinstance(self.env, gym.Env) else self.env.render()
             draw_game(img)
+
+            if recording:
+                segment_buffer.append(np.array(img))
+
+            if self.record_mode:
+                episode_buffer.append(np.array(img))
 
             if self.verbose:
                 clear_header()
@@ -108,4 +136,16 @@ class Game:
                 self.env.reset()
                 do_reset = False
 
+                if self.record_mode:
+                    if input('Save episode? [Y/n] ').lower() != 'n':
+                        self.save_recording(np.stack(episode_buffer))
+                    episode_buffer = []
+
         pygame.quit()
+
+    def save_recording(self, frames):
+        self.record_dir.mkdir(exist_ok=True, parents=True)
+        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        np.save(self.record_dir / timestamp, frames)
+        make_video(self.record_dir / f'{timestamp}.mp4', fps=15, frames=frames)
+        print(f'Saved recording {timestamp}.')

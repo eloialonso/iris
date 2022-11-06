@@ -17,7 +17,6 @@
 - Our approach casts dynamics learning as a sequence modeling problem, where the autoencoder builds a language of image tokens and the Transformer composes that language over time.
 
 
-
 ## BibTeX
 
 If you find this code or paper useful, please use the following reference:
@@ -100,15 +99,27 @@ outputs/YYYY-MM-DD/hh-mm-ss/
   - `eval.py`: Launch `python ./scripts/eval.py` to evaluate the run.
   - `resume.sh`: Launch `./scripts/resume.sh` to resume a training that crashed.
   - `play.sh`: Tool to visualize some interesting aspects of the run.
-    - Launch `./scripts/play.sh -a` to watch the agent play live in the environment. The left panel displays the original environment, and the right panel shows what the agent actually sees through its discrete autoencoder.
+    - Launch `./scripts/play.sh` to watch the agent play live in the environment. If you add the flag `-r`, the left panel displays the original frame, the center panel displays the same frame downscaled to the input resolution of the discrete autoencoder, and the right panel shows the output of the autoencoder (what the agent actually sees).
     - Launch `./scripts/play.sh -w` to unroll live trajectories with your keyboard inputs (i.e. to play in the world model). Note that for faster interaction, the memory of the Transformer is flushed every 20 frames.
-    - Launch `./scripts/play.sh` to visualize the episodes contained in `media/episodes`.
+    - Launch `./scripts/play.sh -a` to watch the agent play live in the world model. Note that for faster interaction, the memory of the Transformer is flushed every 20 frames.
+    - Launch `./scripts/play.sh -e` to visualize the episodes contained in `media/episodes`.
+    - Add the flag `-h` to display a header with additional information.
+    - Press '`,`' to start and stop recording. The corresponding segment is saved in `media/recordings` in mp4 and numpy formats.
+    - Add the flag `-s` to enter 'save mode', where the user is prompted to save trajectories upon completion.
 
 ## Results notebook
 
 The folder `results/data/` contains raw scores (for each game, and for each training run) for IRIS and the baselines.
 
 Use the notebook `results/results_iris.ipynb` to reproduce the figures from the paper.
+
+## Pretrained models
+
+Pretrained models are available [here](https://github.com/eloialonso/iris_pretrained_models).
+
+- To start a training run from one of these checkpoints, in the section `initialization` of  `config/trainer.yaml`, set `path_to_checkpoint` to the corresponding path, and `load_tokenizer`, `load_world_model`, and `load_actor_critic` to `True`.
+
+- To visualize one of these checkpoints, set `train.id` to the corresponding game in `config/env/default.yaml`, create a `checkpoints` directory and copy the checkpoint to `checkpoints/last.pt`. You can then visualize the agent with `./scripts/play.sh` as described above.
 
 ## Credits
 
