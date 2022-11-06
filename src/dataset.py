@@ -61,10 +61,13 @@ class EpisodesDataset:
         self.newly_modified_episodes.add(episode_id)
         return episode_id
 
-    def sample_batch(self, batch_num_samples: int, sequence_length: int, weights: Optional[Tuple[float]] = None, sample_from_start: bool = True) -> Batch:
-        return self._collate_episodes_segments(self._sample_episodes_segments(batch_num_samples, sequence_length, weights, sample_from_start))
+    def sample_batch(self, batch_num_samples: int, sequence_length: int, weights: Optional[Tuple[float]] = None,
+                     sample_from_start: bool = True) -> Batch:
+        return self._collate_episodes_segments(
+            self._sample_episodes_segments(batch_num_samples, sequence_length, weights, sample_from_start))
 
-    def _sample_episodes_segments(self, batch_num_samples: int, sequence_length: int, weights: Optional[Tuple[float]], sample_from_start: bool) -> List[Episode]:
+    def _sample_episodes_segments(self, batch_num_samples: int, sequence_length: int, weights: Optional[Tuple[float]],
+                                  sample_from_start: bool) -> List[Episode]:
         num_episodes = len(self.episodes)
         num_weights = len(weights) if weights is not None else 0
 
@@ -72,7 +75,8 @@ class EpisodesDataset:
             weights = [1] * num_episodes
         else:
             assert all([0 <= x <= 1 for x in weights]) and sum(weights) == 1
-            sizes = [num_episodes // num_weights + (num_episodes % num_weights) * (i == num_weights - 1) for i in range(num_weights)]
+            sizes = [num_episodes // num_weights + (num_episodes % num_weights) * (i == num_weights - 1) for i in
+                     range(num_weights)]
             weights = [w / s for (w, s) in zip(weights, sizes) for _ in range(s)]
 
         sampled_episodes = random.choices(self.episodes, k=batch_num_samples, weights=weights)
@@ -99,8 +103,10 @@ class EpisodesDataset:
 
     def traverse(self, batch_num_samples: int, chunk_size: int):
         for episode in self.episodes:
-            chunks = [episode.segment(start=i * chunk_size, stop=(i + 1) * chunk_size, should_pad=True) for i in range(math.ceil(len(episode) / chunk_size))]
-            batches = [chunks[i * batch_num_samples: (i + 1) * batch_num_samples] for i in range(math.ceil(len(chunks) / batch_num_samples))]
+            chunks = [episode.segment(start=i * chunk_size, stop=(i + 1) * chunk_size, should_pad=True) for i in
+                      range(math.ceil(len(episode) / chunk_size))]
+            batches = [chunks[i * batch_num_samples: (i + 1) * batch_num_samples] for i in
+                       range(math.ceil(len(chunks) / batch_num_samples))]
             for b in batches:
                 yield self._collate_episodes_segments(b)
 
@@ -128,6 +134,7 @@ class EpisodesDatasetRamMonitoring(EpisodesDataset):
     Prevent episode dataset from going out of RAM.
     Warning: % looks at system wide RAM usage while G looks only at process RAM usage.
     """
+
     def __init__(self, max_ram_usage: str, name: Optional[str] = None) -> None:
         super().__init__(max_num_episodes=None, name=name)
         self.max_ram_usage = max_ram_usage

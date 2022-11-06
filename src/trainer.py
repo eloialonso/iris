@@ -25,6 +25,7 @@ from models.world_model import WorldModel
 from src.utils import configure_optimizer, EpisodeDirManager, set_seed
 
 
+# TODO rewards adjust (currently -1 0 1)
 class Trainer:
     def __init__(self, cfg: DictConfig) -> None:
         wandb.init(
@@ -88,7 +89,7 @@ class Trainer:
         tokenizer = instantiate(cfg.tokenizer)
         world_model = WorldModel(obs_vocab_size=tokenizer.vocab_size, act_vocab_size=env.num_actions,
                                  act_continuous_size=env.num_continuous,
-                                 config=instantiate(cfg.world_model))  # TODO add continuous
+                                 config=instantiate(cfg.world_model))  # TODO add continuous #1done
         actor_critic = ActorCritic(**cfg.actor_critic, act_vocab_size=env.num_actions, act_continuous_size=env.num_continuous)
         self.agent = Agent(tokenizer, world_model, actor_critic).to(self.device)
         print(f'{sum(p.numel() for p in self.agent.tokenizer.parameters())} parameters in agent.tokenizer')

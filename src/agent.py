@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Tuple
 
 import torch
 from torch.distributions.categorical import Categorical
@@ -35,7 +36,7 @@ class Agent(nn.Module):
         if load_actor_critic:
             self.actor_critic.load_state_dict(extract_state_dict(agent_state_dict, 'actor_critic'))
 
-    def act(self, obs: torch.FloatTensor, should_sample: bool = True, temperature: float = 1.0) -> torch.LongTensor:
+    def act(self, obs: torch.FloatTensor, should_sample: bool = True, temperature: float = 1.0) -> Tuple[torch.LongTensor, torch.FloatTensor]:
         input_ac = obs if self.actor_critic.use_original_obs else torch.clamp(
             self.tokenizer.encode_decode(obs, should_preprocess=True, should_postprocess=True), 0, 1)
         out = self.actor_critic(input_ac)
@@ -44,4 +45,4 @@ class Agent(nn.Module):
             sample_shape=(1,)) if should_sample else logits_actions.argmax(dim=-1)
         mean_continuous, std_continuous = out.mean_continuous, out.std_continuous
         act_continuous = torch.sigmoid(Normal(mean_continuous, std_continuous).rsample())
-        return torch.concat((act_token, act_continuous), )  # TODO add sigmoid on the logits split #1done
+        return act_token, act_continuous  # TODO add sigmoid on the logits split #1done

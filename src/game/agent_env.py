@@ -8,6 +8,7 @@ from src.envs import SingleProcessEnv
 from src.game.keymap import get_keymap_and_action_names
 
 
+# TODO cont
 class AgentEnv:
     def __init__(self, agent: Agent, env: SingleProcessEnv, keymap_name: str) -> None:
         assert isinstance(env, SingleProcessEnv)
@@ -35,7 +36,7 @@ class AgentEnv:
 
     def step(self, *args, **kwargs) -> torch.FloatTensor:
         with torch.no_grad():
-            act = self.agent.act(self.obs, should_sample=True).cpu().numpy()
+            act = self.agent.act(self.obs, should_sample=True).cpu().numpy()  # TODO new signature
         obs, reward, done, _ = self.env.step(act)
         self.obs = self._to_tensor(obs)
         self._t += 1

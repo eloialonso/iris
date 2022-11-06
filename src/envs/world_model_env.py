@@ -62,7 +62,8 @@ class WorldModelEnv:
         return outputs_wm.output_sequence  # (B, K, E)
 
     @torch.no_grad()
-    def step(self, action: Union[int, np.ndarray, torch.LongTensor], should_predict_next_obs: bool = True) -> None:
+    def step(self, action: Union[int, np.ndarray, torch.LongTensor], continuous=None, should_predict_next_obs: bool = True) -> None:
+
         # TODO accept continuous (pass another arg into world model only when action token)
         assert self.keys_values_wm is not None and self.num_observations_tokens is not None
 
@@ -75,10 +76,14 @@ class WorldModelEnv:
 
         token = action.clone().detach() if isinstance(action, torch.Tensor) else torch.tensor(action, dtype=torch.long)
         token = token.reshape(-1, 1).to(self.device)  # (B, 1)
+        if continuous is not None:
+            continuous = continuous.clone().detach() if isinstance(continuous, torch.Tensor) else torch.tensor(continuous,
+                                                                                                  dtype=torch.float)
+            continuous = continuous.reshape(-1, 1, self.world_model.act_continuous_size).to(self.device)  # (B, 1, #act_continuous)
 
         for k in range(num_passes):  # assumption that there is only one action token.
 
-            outputs_wm = self.world_model(token, past_keys_values=self.keys_values_wm)
+            outputs_wm = self.world_model(token, past_keys_values=self.keys_values_wm, continuous=continuous)
             output_sequence.append(outputs_wm.output_sequence)
 
             if k == 0:

@@ -41,7 +41,7 @@ class ImagineOutput:
 
 class ActorCritic(nn.Module):
     def __init__(self, act_vocab_size, act_continuous_size, use_original_obs: bool = False) -> None:
-        # TODO add act continuous size
+        # TODO add act continuous size #1done
         super().__init__()
         self.use_original_obs = use_original_obs
         self.conv1 = nn.Conv2d(3, 32, 3, stride=1, padding=1)
@@ -184,7 +184,8 @@ class ActorCritic(nn.Module):
                 logits=outputs_ac.logits_actions).sample()  # TODO add continuous (from new OutputClass) #1done
             action_continuous = Normal(outputs_ac.mean_continuous, outputs_ac.std_continuous).rsample()
             obs, reward, done, _ = wm_env.step(action_token,
-                                               should_predict_next_obs=(k < horizon - 1))  # TODO add continuous
+                                               continuous=action_continuous,
+                                               should_predict_next_obs=(k < horizon - 1))  # TODO add continuous #1done
 
             all_actions.append(action_token)  # TODO concat #1done
             all_continuous.append(action_continuous)

@@ -133,10 +133,11 @@ class EpisodeDirManager:
 
 
 class RandomHeuristic:
-    def __init__(self, num_actions):
+    def __init__(self, num_actions, num_continuous):
         self.num_actions = num_actions
+        self.num_continuous = num_continuous
 
     def act(self, obs):
         assert obs.ndim == 4  # (N, H, W, C)
         n = obs.size(0)
-        return torch.randint(low=0, high=self.num_actions, size=(n,))
+        return torch.randint(low=0, high=self.num_actions, size=(n,)), torch.rand(size=(n,self.num_continuous))
