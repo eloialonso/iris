@@ -53,7 +53,6 @@ collection:
 training:
   should: True
   learning_rate: 0.0001
-  sampling_weights: [0.125, 0.125, 0.25, 0.5]
   tokenizer:
     batch_num_samples: 256
     grad_acc_steps: 1
