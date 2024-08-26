@@ -117,7 +117,7 @@ Use the notebook `results/results_iris.ipynb` to reproduce the figures from the 
 
 ## Pretrained models
 
-Pretrained models are available [here](https://github.com/eloialonso/iris_pretrained_models).
+Pretrained models are available [here](https://huggingface.co/eloialonso/iris/tree/main/pretrained_models).
 
 - To start a training run from one of these checkpoints, in the section `initialization` of  `config/trainer.yaml`, set `path_to_checkpoint` to the corresponding path, and `load_tokenizer`, `load_world_model`, and `load_actor_critic` to `True`.
 
