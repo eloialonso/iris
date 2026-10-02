@@ -25,6 +25,8 @@ class EpisodesDataset:
         return len(self.episodes)
 
     def clear(self) -> None:
+        self.newly_deleted_episodes.update(self.episode_id_to_queue_idx)
+        self.newly_modified_episodes.clear()
         self.episodes = deque()
         self.episode_id_to_queue_idx = dict()
 
@@ -49,6 +51,7 @@ class EpisodesDataset:
     def _popleft(self) -> Episode:
         id_to_delete = [k for k, v in self.episode_id_to_queue_idx.items() if v == 0]
         assert len(id_to_delete) == 1
+        self.newly_modified_episodes.discard(id_to_delete[0])
         self.newly_deleted_episodes.add(id_to_delete[0])
         self.episode_id_to_queue_idx = {k: v - 1 for k, v in self.episode_id_to_queue_idx.items() if v > 0}
         return self.episodes.popleft()
@@ -99,17 +102,19 @@ class EpisodesDataset:
             episode = self.get_episode(episode_id)
             episode.save(directory / f'{episode_id}.pt')
         for episode_id in self.newly_deleted_episodes:
-            (directory / f'{episode_id}.pt').unlink()
+            (directory / f'{episode_id}.pt').unlink(missing_ok=True)
         self.newly_modified_episodes, self.newly_deleted_episodes = set(), set()
 
     def load_disk_checkpoint(self, directory: Path) -> None:
         assert directory.is_dir() and len(self.episodes) == 0
         episode_ids = sorted([int(p.stem) for p in directory.iterdir()])
-        self.num_seen_episodes = episode_ids[-1] + 1
+        self.num_seen_episodes = episode_ids[-1] + 1 if episode_ids else 0
         for episode_id in episode_ids:
             episode = Episode(**torch.load(directory / f'{episode_id}.pt'))
             self.episode_id_to_queue_idx[episode_id] = len(self.episodes)
             self.episodes.append(episode)
+        self.newly_modified_episodes.clear()
+        self.newly_deleted_episodes.clear()
 
 
 class EpisodesDatasetRamMonitoring(EpisodesDataset):
@@ -136,6 +141,10 @@ class EpisodesDatasetRamMonitoring(EpisodesDataset):
     def clear(self) -> None:
         super().clear()
         self.num_steps = 0
+
+    def load_disk_checkpoint(self, directory: Path) -> None:
+        super().load_disk_checkpoint(directory)
+        self.num_steps = sum(len(episode) for episode in self.episodes)
 
     def add_episode(self, episode: Episode) -> int:
         if self.max_num_steps is None and self.check_ram_usage():
